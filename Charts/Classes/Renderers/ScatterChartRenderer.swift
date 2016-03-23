@@ -85,7 +85,10 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
         {
             guard let e = dataSet.entryForIndex(j) else { continue }
             
-            point.x = CGFloat(e.xIndex)
+            let xVal = self.determineXVal(dataSet, entry: e, index: j)
+            if (xVal.isNaN) { continue }
+
+            point.x = CGFloat(xVal)
             point.y = CGFloat(e.value) * phaseY
             point = CGPointApplyAffineTransform(point, valueToPixelMatrix);            
             
@@ -261,6 +264,22 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
         CGContextRestoreGState(context)
     }
     
+    private func determineXVal (dataSet: IScatterChartDataSet, entry: ChartDataEntry, index: Int) -> Double {
+        switch self.valueType {
+        case .Default:
+            return Double(entry.xIndex)
+
+        case .Numeric:
+            guard let dataProvider = dataProvider else { return Double.NaN }
+            guard let xVal = Double((dataProvider.scatterData?.xVals[entry.xIndex])!) else { return Double.NaN }
+            
+            return xVal
+            
+        default:
+            return Double(entry.xIndex)
+        }
+    }
+    
     public override func drawValues(context context: CGContext)
     {
         guard let
@@ -302,9 +321,12 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
                 
                 for (var j = 0, count = Int(ceil(CGFloat(entryCount) * phaseX)); j < count; j++)
                 {
-                    guard let e = dataSet.entryForIndex(j) else { break }
+                    guard let e = dataSet.entryForIndex(j) else { continue }
                     
-                    pt.x = CGFloat(e.xIndex)
+                    let xVal = self.determineXVal(dataSet, entry: e, index: j)
+                    if (xVal.isNaN) { continue }
+                    
+                    pt.x = CGFloat(xVal)
                     pt.y = CGFloat(e.value) * phaseY
                     pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                     
@@ -390,7 +412,9 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
             
             let y = CGFloat(yVal) * animator.phaseY; // get the y-position
             
-            _highlightPointBuffer.x = CGFloat(xIndex)
+            guard let xVal = Double((dataProvider.scatterData?.xVals[xIndex])!) else { continue }
+
+            _highlightPointBuffer.x = CGFloat(xVal)
             _highlightPointBuffer.y = y
             
             let trans = dataProvider.getTransformer(set.axisDependency)

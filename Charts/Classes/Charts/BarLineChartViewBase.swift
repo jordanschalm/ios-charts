@@ -1948,24 +1948,70 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     /// - returns: the lowest x-index (value on the x-axis) that is still visible on he chart.
     public var lowestVisibleXIndex: Int
     {
-        var pt = CGPoint(x: viewPortHandler.contentLeft, y: viewPortHandler.contentBottom)
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft,
+            y: viewPortHandler.contentBottom
+        )
+        
         getTransformer(.Left).pixelToValue(&pt)
+        
         return (pt.x <= 0.0) ? 0 : Int(round(pt.x + 1.0))
     }
     
+    public var lowestVisibleXValue: Double {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft,
+            y: viewPortHandler.contentBottom
+        )
+        
+        getTransformer(.Left).pixelToValue(&pt)
+        
+        return Double(pt.x)
+    }
+    
+    public var lowestVisibleXTime: Double {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft,
+            y: viewPortHandler.contentBottom
+        )
+        
+        getTransformer(.Left).pixelToValue(&pt)
+        
+        return Double(pt.x)
+    }
+    
     /// - returns: the highest x-index (value on the x-axis) that is still visible on the chart.
-    public var highestVisibleXIndex: Int
-    {
+    public var highestVisibleXIndex: Int {
         var pt = CGPoint(
             x: viewPortHandler.contentRight,
             y: viewPortHandler.contentBottom)
         
         getTransformer(.Left).pixelToValue(&pt)
-
-        guard let
-            data = _data
-            else { return Int(round(pt.x)) }
-
+        
+        guard let data = _data else { return Int(round(pt.x)) }
+        
         return min(data.xValCount - 1, Int(round(pt.x)))
+
+    }
+    
+    public var highestVisibleXValue: Double {
+        var pt = CGPoint(
+            x: viewPortHandler.contentRight,
+            y: viewPortHandler.contentBottom)
+        
+        getTransformer(.Left).pixelToValue(&pt)
+        
+        return min(_chartXMax, Double(pt.x))
+    }
+    
+    public var highestVisibleXTime: Double {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft,
+            y: viewPortHandler.contentBottom
+        )
+        
+        getTransformer(.Left).pixelToValue(&pt)
+        
+        return min(_chartXMax, Double(pt.x))
     }
 }

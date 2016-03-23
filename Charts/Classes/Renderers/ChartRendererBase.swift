@@ -25,6 +25,12 @@ public class ChartRendererBase: NSObject
     /// the maximum value on the x-axis that should be plotted
     public var maxX: Int = 0
     
+    public enum ValueType {
+        case Default, Numeric, Temporal
+    }
+    
+    public var valueType = ValueType.Default
+
     public override init()
     {
         super.init()
