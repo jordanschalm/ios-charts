@@ -17,6 +17,11 @@ import Foundation
 
 public class ChartData: NSObject
 {
+    internal enum ValueType {
+        case Default, Numeric, Temporal
+    }
+    internal var _valueType = ValueType.Default
+    
     internal var _yMax = Double(0.0)
     internal var _yMin = Double(0.0)
     internal var _leftAxisMax = Double(0.0)
@@ -35,6 +40,9 @@ public class ChartData: NSObject
     private var _xValAverageLength = Double(0.0)
     
     internal var _xVals: [String?]!
+    // xVals can be defined as numeric which allows for data processing when setting data
+    internal var _xValsNumeric: [Double?]!
+
     internal var _dataSets: [IChartDataSet]!
     
     public override init()
@@ -50,6 +58,32 @@ public class ChartData: NSObject
         super.init()
         
         _xVals = xVals == nil ? [String?]() : xVals
+        _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
+        
+        self.initialize(_dataSets)
+    }
+    
+    public init(xVals: [Double?]?, dataSets: [IChartDataSet]?)
+    {
+        super.init()
+        
+        _xVals = xVals == nil ? [String?]() : ChartUtils.bridgedObjCGetStringArray(objc: xVals!)
+        _xValsNumeric = xVals == nil ? [Double?]() : xVals
+        _valueType = .Numeric
+        
+        _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
+        
+        self.initialize(_dataSets)
+    }
+    
+    public init(xVals: [NSDate?]?, dataSets: [IChartDataSet]?)
+    {
+        super.init()
+        
+        _xVals = xVals == nil ? [String?]() : ChartUtils.bridgedObjCGetStringArray(objc: xVals!)
+        _xValsNumeric = xVals == nil ? [Double?]() : ChartUtils.bridgedObjCGetDoubleArray(objc: xVals!)
+        _valueType = .Temporal
+        
         _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
         
         self.initialize(_dataSets)

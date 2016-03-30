@@ -269,8 +269,8 @@ public class LineChartRenderer: LineRadarChartRenderer
         let xFromVal = self.determineXVal(dataSet, entry: xFrom, index: xFrom.xIndex)
         if (xFromVal.isNaN) { return }
 
-        var pt1 = CGPoint(x: CGFloat(xFromVal), y: fillMin)
-        var pt2 = CGPoint(x: CGFloat(xToVal), y: fillMin)
+        var pt1 = CGPoint(x: xFromVal, y: fillMin)
+        var pt2 = CGPoint(x: xToVal, y: fillMin)
         pt1 = CGPointApplyAffineTransform(pt1, matrix)
         pt2 = CGPointApplyAffineTransform(pt2, matrix)
         
@@ -336,7 +336,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 let xVal = self.determineXVal(dataSet, entry: e, index: j)
                 if (xVal.isNaN) { continue }
                 
-                _lineSegments[0].x = CGFloat(xVal)
+                _lineSegments[0].x = xVal
                 _lineSegments[0].y = CGFloat(e.value) * phaseY
                 
                 if (j + 1 < count)
@@ -348,13 +348,13 @@ public class LineChartRenderer: LineRadarChartRenderer
 
                     if isDrawSteppedEnabled
                     {
-                        _lineSegments[1] = CGPoint(x: CGFloat(xValEnd), y: _lineSegments[0].y)
+                        _lineSegments[1] = CGPoint(x: xValEnd, y: _lineSegments[0].y)
                         _lineSegments[2] = _lineSegments[1]
-                        _lineSegments[3] = CGPoint(x: CGFloat(xValEnd), y: CGFloat(eEnd.value) * phaseY)
+                        _lineSegments[3] = CGPoint(x: xValEnd, y: CGFloat(eEnd.value) * phaseY)
                     }
                     else
                     {
-                        _lineSegments[1] = CGPoint(x: CGFloat(xValEnd), y: CGFloat(eEnd.value) * phaseY)
+                        _lineSegments[1] = CGPoint(x: xValEnd, y: CGFloat(eEnd.value) * phaseY)
                     }
                 }
                 else
@@ -499,8 +499,8 @@ public class LineChartRenderer: LineRadarChartRenderer
             let xVal = self.determineXVal(dataSet, entry: e, index: 0)
             if (xVal.isNaN) { return filled }
 
-            CGPathMoveToPoint(filled, &matrix, CGFloat(xVal), fillMin)
-            CGPathAddLineToPoint(filled, &matrix, CGFloat(xVal), CGFloat(e.value) * phaseY)
+            CGPathMoveToPoint(filled, &matrix, xVal, fillMin)
+            CGPathAddLineToPoint(filled, &matrix, xVal, CGFloat(e.value) * phaseY)
         }
 
         for (var x = 1, count = dataSet.entryCount; x < count; x++)
@@ -516,7 +516,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 CGPathAddLineToPoint(filled, &matrix, CGFloat(xVal), CGFloat(ePrev.value) * phaseY)
             }
             
-            CGPathAddLineToPoint(filled, &matrix, CGFloat(xVal), CGFloat(e.value) * phaseY)
+            CGPathAddLineToPoint(filled, &matrix, xVal, CGFloat(e.value) * phaseY)
         }
         
         // close up
@@ -526,7 +526,7 @@ public class LineChartRenderer: LineRadarChartRenderer
             let xVal = self.determineXVal(dataSet, entry: e, index: (dataSet.entryCount - 1))
             if (xVal.isNaN) { return filled }
             
-            CGPathAddLineToPoint(filled, &matrix, CGFloat(xVal), fillMin)
+            CGPathAddLineToPoint(filled, &matrix, xVal, fillMin)
         }
         CGPathCloseSubpath(filled)
         
@@ -580,7 +580,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                     let xVal = self.determineXVal(dataSet, entry: e, index: j)
                     if (xVal.isNaN) { continue }
                     
-                    pt.x = CGFloat(xVal)
+                    pt.x = xVal
                     pt.y = CGFloat(e.value) * phaseY
                     pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                     
@@ -644,7 +644,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 let xVal = self.determineXVal(dataSet, entry: e, index: j)
                 if (xVal.isNaN) { continue }
                 
-                pt.x = CGFloat(xVal)
+                pt.x = xVal
                 pt.y = CGFloat(e.value) * phaseY
                 pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                 
@@ -679,23 +679,23 @@ public class LineChartRenderer: LineRadarChartRenderer
         CGContextRestoreGState(context)
     }
     
-    private func determineXVal (dataSet: ILineChartDataSet, entry: ChartDataEntry, index: Int) -> Double {
+    private func determineXVal (dataSet: ILineChartDataSet, entry: ChartDataEntry, index: Int) -> CGFloat {
         switch self.valueType {
         case .Default:
-            return Double(entry.xIndex)
+            return CGFloat(entry.xIndex)
             
         case .Temporal:
-            guard let dataProvider = dataProvider else { return Double.NaN }
-            guard let xVal = (dataProvider.lineData?.xVals[entry.xIndex]) else { return Double.NaN }
+            guard let dataProvider = dataProvider else { return CGFloat.NaN }
+            guard let xVal = (dataProvider.lineData?.xVals[entry.xIndex]) else { return CGFloat.NaN }
             
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             let date = dateFormatter.dateFromString(xVal)
-            return (date?.timeIntervalSince1970)!
+            return CGFloat((date?.timeIntervalSince1970)!)
             
         default:
-            return Double(entry.xIndex)
+            return CGFloat(entry.xIndex)
         }
     }
     

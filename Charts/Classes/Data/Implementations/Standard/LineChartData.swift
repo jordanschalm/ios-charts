@@ -25,7 +25,7 @@ public class LineChartData: ChartData
     {
         super.init(xVals: xVals, dataSets: dataSets)
     }
-    
+
     public override init(xVals: [NSObject]?, dataSets: [IChartDataSet]?)
     {
         super.init(xVals: xVals, dataSets: dataSets)

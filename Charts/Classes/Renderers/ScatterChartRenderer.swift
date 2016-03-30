@@ -88,7 +88,7 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
             let xVal = self.determineXVal(dataSet, entry: e, index: j)
             if (xVal.isNaN) { continue }
 
-            point.x = CGFloat(xVal)
+            point.x = xVal
             point.y = CGFloat(e.value) * phaseY
             point = CGPointApplyAffineTransform(point, valueToPixelMatrix);            
             
@@ -264,19 +264,19 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
         CGContextRestoreGState(context)
     }
     
-    private func determineXVal (dataSet: IScatterChartDataSet, entry: ChartDataEntry, index: Int) -> Double {
+    private func determineXVal (dataSet: IScatterChartDataSet, entry: ChartDataEntry, index: Int) -> CGFloat {
         switch self.valueType {
         case .Default:
-            return Double(entry.xIndex)
+            return CGFloat(entry.xIndex)
 
         case .Numeric:
-            guard let dataProvider = dataProvider else { return Double.NaN }
-            guard let xVal = Double((dataProvider.scatterData?.xVals[entry.xIndex])!) else { return Double.NaN }
+            guard let dataProvider = dataProvider else { return CGFloat.NaN }
+            guard let xVal = Double((dataProvider.scatterData?.xVals[entry.xIndex])!) else { return CGFloat.NaN }
             
-            return xVal
+            return CGFloat(xVal)
             
         default:
-            return Double(entry.xIndex)
+            return CGFloat(entry.xIndex)
         }
     }
     
@@ -326,7 +326,7 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
                     let xVal = self.determineXVal(dataSet, entry: e, index: j)
                     if (xVal.isNaN) { continue }
                     
-                    pt.x = CGFloat(xVal)
+                    pt.x = xVal
                     pt.y = CGFloat(e.value) * phaseY
                     pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
                     

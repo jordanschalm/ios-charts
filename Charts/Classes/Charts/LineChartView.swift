@@ -41,7 +41,7 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
             _deltaX = 1.0
         }
         
-        // Danger these should get defaults after the loop of things might explode
+        // Danger these should get defaults after the loop or things might explode
         var maxValue = Double.NaN
         var minValue = Double.NaN
         for (var i = 0, len = data.xVals.count; i < len; i++) {
