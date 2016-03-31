@@ -17,7 +17,7 @@ import Foundation
 
 public class ChartData: NSObject
 {
-    internal enum ValueType {
+    public enum ValueType {
         case Default, Numeric, Temporal
     }
     internal var _valueType = ValueType.Default
@@ -366,16 +366,30 @@ public class ChartData: NSObject
         return _xVals
     }
     
+    /// - returns: the x-values numeric the chart represents
+    public var xValsNumeric: [Double?]
+    {
+        return _xValsNumeric
+    }
+    
     ///Adds a new x-value to the chart data.
     public func addXValue(xVal: String?)
     {
         _xVals.append(xVal)
     }
     
+    ///Adds a new x-value to the chart data.
+    public func addXValueNumeric(xVal: Double?)
+    {
+        _xValsNumeric.append(xVal)
+        _xVals.append(String(xVal))
+    }
+    
     /// Removes the x-value at the specified index.
     public func removeXValue(index: Int)
     {
         _xVals.removeAtIndex(index)
+        _xValsNumeric.removeAtIndex(index)
     }
     
     /// - returns: the array of ChartDataSets this object holds.
@@ -839,6 +853,18 @@ public class ChartData: NSObject
         return xvals
     }
     
+    public func generateXValsNumeric(from: Int, to: Int) -> [Double]
+    {
+        var xvals = [Double]()
+        
+        for (var i = from; i < to; i++)
+        {
+            xvals.append(Double(i))
+        }
+        
+        return xvals
+    }
+    
     /// Sets a custom ValueFormatter for all DataSets this data object contains.
     public func setValueFormatter(formatter: NSNumberFormatter!)
     {
@@ -941,6 +967,9 @@ public class ChartData: NSObject
         return false
     }
     
+    // Expose the valuetype of the data
+    public var valueType: ValueType { return _valueType }
+
     /// MARK: - ObjC compatibility
     
     /// - returns: the average length (in characters) across all values in the x-vals array

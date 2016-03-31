@@ -29,7 +29,7 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
     internal override func calcMinMax() {
         super.calcMinMax()
         
-        if (self._valueType == .Temporal) {
+        if (self._data?.valueType == .Temporal) {
             self.calcMinMaxTime()
         }
     }
@@ -63,32 +63,28 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
         _deltaX = CGFloat(abs(_chartXMax - _chartXMin))
     }
     
-    public var valueType: ValueType {
-        set {
-            _valueType = newValue
-            
-            switch _valueType {
+    public override func notifyDataSetChanged()
+    {
+        // We need to use the proper axis renderer based on the type of data we are using
+        if let data = _data
+        {
+            switch data.valueType {
             case .Default:
                 _xAxisRenderer = ChartXAxisRenderer(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Default
                 break
                 
             case .Numeric:
                 _xAxisRenderer = ChartXAxisRendererNumeric(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Numeric
                 break
-
+                
             case .Temporal:
-                _xAxisRenderer = ChartXAxisRendererTime(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Temporal
+                _xAxisRenderer = ChartXAxisRendererNumeric(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
                 break
             }
         }
-        get {
-            return _valueType
-        }
+        
+        super.notifyDataSetChanged()
     }
-    
     
     // MARK: - LineChartDataProvider
     

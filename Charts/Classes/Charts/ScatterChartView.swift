@@ -30,7 +30,7 @@ public class ScatterChartView: BarLineChartViewBase, ScatterChartDataProvider
     {
         super.calcMinMax()
 
-        if (self._valueType == .Numeric) {
+        if (self._data?.valueType == .Numeric) {
             self.calculateNumbericMinMax()
         } else {
             self.calculateIndexMinMax()
@@ -82,7 +82,7 @@ public class ScatterChartView: BarLineChartViewBase, ScatterChartDataProvider
         super.calcModulus();
         
         // Change modulus function for numeric rendering
-        if (_valueType == .Numeric) {
+        if (self._data?.valueType == .Numeric) {
             self.calculateNumericModulus()
         }
     }
@@ -124,32 +124,28 @@ public class ScatterChartView: BarLineChartViewBase, ScatterChartDataProvider
 
     }
     
-    public var valueType: ValueType {
-        set {
-            _valueType = newValue
-            
-            switch _valueType {
-            case .Numeric:
-                _xAxisRenderer = ChartXAxisRendererNumeric(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Numeric
-                break
-                
+    public override func notifyDataSetChanged()
+    {
+        // We need to use the proper axis renderer based on the type of data we are using
+        if let data = _data
+        {
+            switch data.valueType {
             case .Default:
                 _xAxisRenderer = ChartXAxisRenderer(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Default
                 break
                 
-            default:
-                _xAxisRenderer = ChartXAxisRenderer(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
-                renderer!.valueType = .Default
+            case .Numeric:
+                _xAxisRenderer = ChartXAxisRendererNumeric(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
+                break
+
+            case .Temporal:
+                _xAxisRenderer = ChartXAxisRendererNumeric(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
                 break
             }
         }
-        get {
-            return _valueType
-        }
+
+        super.notifyDataSetChanged()
     }
-    
     
     // MARK: - ScatterChartDataProbider
     

@@ -85,7 +85,7 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
         {
             guard let e = dataSet.entryForIndex(j) else { continue }
             
-            let xVal = self.determineXVal(dataSet, entry: e, index: j)
+            let xVal = self.determineXVal(e)
             if (xVal.isNaN) { continue }
 
             point.x = xVal
@@ -264,19 +264,23 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
         CGContextRestoreGState(context)
     }
     
-    private func determineXVal (dataSet: IScatterChartDataSet, entry: ChartDataEntry, index: Int) -> CGFloat {
-        switch self.valueType {
+    private func determineXVal (entry: ChartDataEntry) -> CGFloat {
+        guard let dataProvider = dataProvider else { return CGFloat.NaN }
+        guard let valueType = dataProvider.scatterData?.valueType else {return CGFloat.NaN }
+        
+        switch valueType {
         case .Default:
             return CGFloat(entry.xIndex)
-
+            
         case .Numeric:
-            guard let dataProvider = dataProvider else { return CGFloat.NaN }
-            guard let xVal = Double((dataProvider.scatterData?.xVals[entry.xIndex])!) else { return CGFloat.NaN }
+            guard let xVal = (dataProvider.scatterData?.xValsNumeric[entry.xIndex]) else { return CGFloat.NaN }
             
             return CGFloat(xVal)
             
-        default:
-            return CGFloat(entry.xIndex)
+        case .Temporal:
+            guard let xVal = (dataProvider.scatterData?.xValsNumeric[entry.xIndex]) else { return CGFloat.NaN }
+            
+            return CGFloat(xVal)
         }
     }
     
@@ -323,7 +327,7 @@ public class ScatterChartRenderer: LineScatterCandleRadarChartRenderer
                 {
                     guard let e = dataSet.entryForIndex(j) else { continue }
                     
-                    let xVal = self.determineXVal(dataSet, entry: e, index: j)
+                    let xVal = self.determineXVal(e)
                     if (xVal.isNaN) { continue }
                     
                     pt.x = xVal

@@ -42,12 +42,6 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
 {
     // MARK: - Properties
     
-    public enum ValueType {
-        case Default, Numeric, Temporal
-    }
-    
-    internal var _valueType = ValueType.Default
-    
     /// the default value formatter
     internal var _defaultValueFormatter: NSNumberFormatter = ChartUtils.defaultValueFormatter()
     

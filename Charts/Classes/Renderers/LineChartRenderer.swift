@@ -136,16 +136,16 @@ public class LineChartRenderer: LineRadarChartRenderer
             if cur == nil || next == nil { return }
             
             // We need to use values to support numeric scaling, defaults to xIndex
-            var curXVal = self.determineXVal(dataSet, entry: cur, index: cur.xIndex)
+            var curXVal = self.determineXVal(cur)
             if (curXVal.isNaN) { return }
             
-            var nextXVal = self.determineXVal(dataSet, entry: next, index: next.xIndex)
+            var nextXVal = self.determineXVal(next)
             if (nextXVal.isNaN) { return }
             
-            var prevXVal = self.determineXVal(dataSet, entry: prev, index: prev.xIndex)
+            var prevXVal = self.determineXVal(prev)
             if (prevXVal.isNaN) { return }
             
-            var prevPrevXVal = self.determineXVal(dataSet, entry: prevPrev, index: prevPrev.xIndex)
+            var prevPrevXVal = self.determineXVal(prevPrev)
             if (prevPrevXVal.isNaN) { return }
             
             // let the spline start
@@ -172,16 +172,16 @@ public class LineChartRenderer: LineRadarChartRenderer
                 
                 if next == nil { break }
                 
-                curXVal = self.determineXVal(dataSet, entry: cur, index: cur.xIndex)
+                curXVal = self.determineXVal(cur)
                 if (curXVal.isNaN) { continue }
                 
-                nextXVal = self.determineXVal(dataSet, entry: next, index: next.xIndex)
+                nextXVal = self.determineXVal(next)
                 if (nextXVal.isNaN) { continue }
                 
-                prevXVal = self.determineXVal(dataSet, entry: prev, index: prev.xIndex)
+                prevXVal = self.determineXVal(prev)
                 if (prevXVal.isNaN) { continue }
                 
-                prevPrevXVal = self.determineXVal(dataSet, entry: prevPrev, index: prevPrev.xIndex)
+                prevPrevXVal = self.determineXVal(prevPrev)
                 if (prevPrevXVal.isNaN) { continue }
 
                 
@@ -204,16 +204,16 @@ public class LineChartRenderer: LineRadarChartRenderer
                 
                 if prevPrev == nil || prev == nil || cur == nil { return }
                 
-                curXVal = self.determineXVal(dataSet, entry: cur, index: cur.xIndex)
+                curXVal = self.determineXVal(cur)
                 if (curXVal.isNaN) { return }
                 
-                nextXVal = self.determineXVal(dataSet, entry: next, index: next.xIndex)
+                nextXVal = self.determineXVal(next)
                 if (nextXVal.isNaN) { return }
                 
-                prevXVal = self.determineXVal(dataSet, entry: prev, index: prev.xIndex)
+                prevXVal = self.determineXVal(prev)
                 if (prevXVal.isNaN) { return }
                 
-                prevPrevXVal = self.determineXVal(dataSet, entry: prevPrev, index: prevPrev.xIndex)
+                prevPrevXVal = self.determineXVal(prevPrev)
                 if (prevPrevXVal.isNaN) { return }
                 
                 prevDx = CGFloat(curXVal - prevPrevXVal) * intensity
@@ -263,10 +263,10 @@ public class LineChartRenderer: LineRadarChartRenderer
         guard let xTo = dataSet.entryForIndex(0) else { return }
         guard let xFrom = dataSet.entryForIndex(dataSet.entryCount - 1) else { return }
         
-        let xToVal = self.determineXVal(dataSet, entry: xTo, index: xTo.xIndex)
+        let xToVal = self.determineXVal(xTo)
         if (xToVal.isNaN) { return }
         
-        let xFromVal = self.determineXVal(dataSet, entry: xFrom, index: xFrom.xIndex)
+        let xFromVal = self.determineXVal(xFrom)
         if (xFromVal.isNaN) { return }
 
         var pt1 = CGPoint(x: xFromVal, y: fillMin)
@@ -333,7 +333,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 
                 guard let e = dataSet.entryForIndex(j) else { continue }
                 
-                let xVal = self.determineXVal(dataSet, entry: e, index: j)
+                let xVal = self.determineXVal(e)
                 if (xVal.isNaN) { continue }
                 
                 _lineSegments[0].x = xVal
@@ -343,7 +343,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 {
                     guard let eEnd = dataSet.entryForIndex(j + 1) else { break }
                     
-                    let xValEnd = self.determineXVal(dataSet, entry: eEnd, index: j)
+                    let xValEnd = self.determineXVal(eEnd)
                     if (xVal.isNaN) { continue }
 
                     if isDrawSteppedEnabled
@@ -410,11 +410,11 @@ public class LineChartRenderer: LineRadarChartRenderer
                     
                     if e1 == nil || e2 == nil { continue }
 
-                    let xVal1 = self.determineXVal(dataSet, entry: e1, index: j)
+                    let xVal1 = self.determineXVal(e1)
                     if (xVal1.isNaN) { continue }
                     let position1 = CGPointApplyAffineTransform(CGPoint(x: CGFloat(xVal1), y: CGFloat(e1.value) * phaseY), valueToPixelMatrix)
                     
-                    let xVal2 = self.determineXVal(dataSet, entry: e2, index: j)
+                    let xVal2 = self.determineXVal(e2)
                     if (xVal2.isNaN) { continue }
                     let position2 = CGPointApplyAffineTransform(CGPoint(x: CGFloat(xVal2), y: CGFloat(e2.value) * phaseY), valueToPixelMatrix)
                     
@@ -496,7 +496,7 @@ public class LineChartRenderer: LineRadarChartRenderer
         e = dataSet.entryForIndex(0)
         if e != nil
         {
-            let xVal = self.determineXVal(dataSet, entry: e, index: 0)
+            let xVal = self.determineXVal(e)
             if (xVal.isNaN) { return filled }
 
             CGPathMoveToPoint(filled, &matrix, xVal, fillMin)
@@ -507,7 +507,7 @@ public class LineChartRenderer: LineRadarChartRenderer
         {
             guard let e = dataSet.entryForIndex(x) else { continue }
             
-            let xVal = self.determineXVal(dataSet, entry: e, index: x)
+            let xVal = self.determineXVal(e)
             if (xVal.isNaN) { continue }
 
             if isDrawSteppedEnabled
@@ -523,7 +523,7 @@ public class LineChartRenderer: LineRadarChartRenderer
         e = dataSet.entryForIndex(dataSet.entryCount - 1)
         if e != nil
         {
-            let xVal = self.determineXVal(dataSet, entry: e, index: (dataSet.entryCount - 1))
+            let xVal = self.determineXVal(e)
             if (xVal.isNaN) { return filled }
             
             CGPathAddLineToPoint(filled, &matrix, xVal, fillMin)
@@ -577,7 +577,7 @@ public class LineChartRenderer: LineRadarChartRenderer
                 {
                     guard let e = dataSet.entryForIndex(j) else { break }
                     
-                    let xVal = self.determineXVal(dataSet, entry: e, index: j)
+                    let xVal = self.determineXVal(e)
                     if (xVal.isNaN) { continue }
                     
                     pt.x = xVal
@@ -641,7 +641,7 @@ public class LineChartRenderer: LineRadarChartRenderer
             {
                 guard let e = dataSet.entryForIndex(j) else { break }
                 
-                let xVal = self.determineXVal(dataSet, entry: e, index: j)
+                let xVal = self.determineXVal(e)
                 if (xVal.isNaN) { continue }
                 
                 pt.x = xVal
@@ -679,23 +679,23 @@ public class LineChartRenderer: LineRadarChartRenderer
         CGContextRestoreGState(context)
     }
     
-    private func determineXVal (dataSet: ILineChartDataSet, entry: ChartDataEntry, index: Int) -> CGFloat {
-        switch self.valueType {
+    private func determineXVal (entry: ChartDataEntry) -> CGFloat {
+        guard let dataProvider = dataProvider else { return CGFloat.NaN }
+        guard let valueType = dataProvider.lineData?.valueType else { return CGFloat.NaN }
+        
+        switch valueType {
         case .Default:
             return CGFloat(entry.xIndex)
+        
+        case .Numeric:
+            guard let xVal = (dataProvider.lineData?.xValsNumeric[entry.xIndex]) else { return CGFloat.NaN }
+            
+            return CGFloat(xVal)
             
         case .Temporal:
-            guard let dataProvider = dataProvider else { return CGFloat.NaN }
-            guard let xVal = (dataProvider.lineData?.xVals[entry.xIndex]) else { return CGFloat.NaN }
-            
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            
-            let date = dateFormatter.dateFromString(xVal)
-            return CGFloat((date?.timeIntervalSince1970)!)
-            
-        default:
-            return CGFloat(entry.xIndex)
+            guard let xVal = (dataProvider.lineData?.xValsNumeric[entry.xIndex]) else { return CGFloat.NaN }
+
+            return CGFloat(xVal)
         }
     }
     
