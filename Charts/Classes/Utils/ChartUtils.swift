@@ -328,16 +328,16 @@ public class ChartUtils
         return newArray
     }
     
-    internal class func bridgedObjCGetDoubleArray (objc array: [NSDate?]) -> [Double?]
+    internal class func bridgedObjCGetDoubleArray (array: [NSDate]) -> [Double]
     {
-        var newArray = [Double?]()
+        var newArray = [Double]()
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         for object in array
         {
-            newArray.append(object!.timeIntervalSince1970)
+            newArray.append(object.timeIntervalSince1970)
         }
         return newArray
     }
@@ -359,7 +359,7 @@ public class ChartUtils
         return newArray
     }
     
-    internal class func bridgedObjCGetStringArray (objc array: [NSDate?]) -> [String?]
+    internal class func bridgedObjCGetStringArray (array: [NSDate]) -> [String?]
     {
         var newArray = [String?]()
         
@@ -368,8 +368,9 @@ public class ChartUtils
         
         for object in array
         {
-            newArray.append(dateFormatter.stringFromDate(object!))
+            newArray.append(dateFormatter.stringFromDate(object))
         }
+        
         return newArray
     }
     

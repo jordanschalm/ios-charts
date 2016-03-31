@@ -59,10 +59,8 @@ public class ScatterChartView: BarLineChartViewBase, ScatterChartDataProvider
         
         var maxValue = _chartXMax
         var minValue = _chartXMin
-        for (var i = 0, len = data.xVals.count; i < len; i++) {
-            guard let value = Double(data.xVals[i]!) else {
-                continue
-            }
+        for (var i = 0, len = data.xValsNumeric.count; i < len; i++) {
+            let value = data.xValsNumeric[i]
             
             if (value > maxValue) { maxValue = value }
             if (value < minValue) { minValue = value }

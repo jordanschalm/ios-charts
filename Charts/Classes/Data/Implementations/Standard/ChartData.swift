@@ -41,14 +41,14 @@ public class ChartData: NSObject
     
     internal var _xVals: [String?]!
     // xVals can be defined as numeric which allows for data processing when setting data
-    internal var _xValsNumeric: [Double?]!
+    internal var _xValsNumeric: [Double]!
 
     internal var _dataSets: [IChartDataSet]!
     
     public override init()
     {
         super.init()
-        
+
         _xVals = [String?]()
         _dataSets = [IChartDataSet]()
     }
@@ -56,19 +56,19 @@ public class ChartData: NSObject
     public init(xVals: [String?]?, dataSets: [IChartDataSet]?)
     {
         super.init()
-        
+
         _xVals = xVals == nil ? [String?]() : xVals
         _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
         
         self.initialize(_dataSets)
     }
     
-    public init(xVals: [Double?]?, dataSets: [IChartDataSet]?)
+    public init(xValsNumeric: [Double], dataSets: [IChartDataSet]?)
     {
         super.init()
-        
-        _xVals = xVals == nil ? [String?]() : ChartUtils.bridgedObjCGetStringArray(objc: xVals!)
-        _xValsNumeric = xVals == nil ? [Double?]() : xVals
+
+        _xVals = ChartUtils.bridgedObjCGetStringArray(objc: xValsNumeric)
+        _xValsNumeric = xValsNumeric
         _valueType = .Numeric
         
         _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
@@ -76,12 +76,12 @@ public class ChartData: NSObject
         self.initialize(_dataSets)
     }
     
-    public init(xVals: [NSDate?]?, dataSets: [IChartDataSet]?)
+    public init(xValsDate: [NSDate], dataSets: [IChartDataSet]?)
     {
         super.init()
-        
-        _xVals = xVals == nil ? [String?]() : ChartUtils.bridgedObjCGetStringArray(objc: xVals!)
-        _xValsNumeric = xVals == nil ? [Double?]() : ChartUtils.bridgedObjCGetDoubleArray(objc: xVals!)
+
+        _xVals = ChartUtils.bridgedObjCGetStringArray(xValsDate)
+        _xValsNumeric = ChartUtils.bridgedObjCGetDoubleArray(xValsDate)
         _valueType = .Temporal
         
         _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
@@ -92,7 +92,7 @@ public class ChartData: NSObject
     public init(xVals: [NSObject]?, dataSets: [IChartDataSet]?)
     {
         super.init()
-        
+
         _xVals = xVals == nil ? [String?]() : ChartUtils.bridgedObjCGetStringArray(objc: xVals!)
         _dataSets = dataSets == nil ? [IChartDataSet]() : dataSets
         
@@ -367,7 +367,7 @@ public class ChartData: NSObject
     }
     
     /// - returns: the x-values numeric the chart represents
-    public var xValsNumeric: [Double?]
+    public var xValsNumeric: [Double]
     {
         return _xValsNumeric
     }
@@ -379,7 +379,7 @@ public class ChartData: NSObject
     }
     
     ///Adds a new x-value to the chart data.
-    public func addXValueNumeric(xVal: Double?)
+    public func addXValueNumeric(xVal: Double)
     {
         _xValsNumeric.append(xVal)
         _xVals.append(String(xVal))

@@ -19,7 +19,7 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
     /// flag that enables or disables the highlighting arrow
     private var _renderNumericXAxis = false
     private var _renderTimeXAxis = true
-    
+   
     internal override func initialize() {
         super.initialize()
         
@@ -82,7 +82,7 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
                 break
             }
         }
-        
+
         super.notifyDataSetChanged()
     }
     

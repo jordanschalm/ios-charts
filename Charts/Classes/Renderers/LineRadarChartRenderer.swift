@@ -49,7 +49,7 @@ public class LineRadarChartRenderer: LineScatterCandleRadarChartRenderer
         
         CGContextSetFillColorWithColor(context, fillColor.CGColor)
         CGContextFillPath(context)
-        print("filled")
+
         CGContextRestoreGState(context)
     }
 }
