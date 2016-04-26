@@ -86,6 +86,14 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     public override init(frame: CGRect)
     {
         super.init(frame: frame)
+        
+        self._externalRenderer = defaultExternalRenderer
+    }
+    
+    public var _externalRenderer: ((chartView: ChartViewBase, chartData: ChartData, datasetIndex: Int) -> ())?
+    
+    func defaultExternalRenderer (chartView: ChartViewBase, chartData: ChartData, datasetIndex: Int) -> () {
+        print("Default external renderer")
     }
     
     public required init?(coder aDecoder: NSCoder)
@@ -279,6 +287,8 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         drawMarkers(context: context)
 
         drawDescription(context: context)
+        
+        self._externalRenderer!(chartView: self, chartData: data!, datasetIndex: 0)
     }
     
     internal func prepareValuePxMatrix()
