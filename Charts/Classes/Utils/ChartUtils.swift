@@ -374,7 +374,7 @@ public class ChartUtils
         return newArray
     }
     
-    internal class func bridgedObjCGetStringArray (objc array: [Double?]) -> [String?]
+    internal class func bridgedObjCGetStringArray (objc array: [Double]) -> [String?]
     {
         var newArray = [String?]()
         for object in array

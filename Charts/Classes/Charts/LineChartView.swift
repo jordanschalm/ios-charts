@@ -31,6 +31,8 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
         
         if (self._data?.valueType == .Temporal) {
             self.calcMinMaxTime()
+        } else if (self._data?.valueType == .Numeric) {
+            self.calculateNumbericMinMax()
         }
     }
 
@@ -60,6 +62,31 @@ public class LineChartView: BarLineChartViewBase, LineChartDataProvider {
         
         _chartXMax = maxValue
         _chartXMin = minValue
+        _deltaX = CGFloat(abs(_chartXMax - _chartXMin))
+    }
+    
+    private func calculateNumbericMinMax () {
+        guard let data = _data else { return }
+        
+        if (_deltaX == 0.0 && data.yValCount > 0)
+        {
+            _deltaX = 1.0
+        }
+        
+        var maxValue = -Double.infinity
+        var minValue = Double.infinity
+        for (var i = 0, len = data.xValsNumeric.count; i < len; i++) {
+            let value = data.xValsNumeric[i]
+            
+            if (value > maxValue) { maxValue = value }
+            if (value < minValue) { minValue = value }
+        }
+        
+        // Add 1 percent padding so we aren't clipping our values
+        let padding = (maxValue - minValue) * 0.01
+        
+        _chartXMax = maxValue + padding
+        _chartXMin = minValue - padding
         _deltaX = CGFloat(abs(_chartXMax - _chartXMin))
     }
     
